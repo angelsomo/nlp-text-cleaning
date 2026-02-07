@@ -1,16 +1,30 @@
 import string
+import unicodedata
 
-def my_cleaner(text: str) -> str:
+def cleaner_v3(text: str) -> str:
+    # Normalize unicode (helps make visually similar chars consistent)
+    text = unicodedata.normalize("NFKC", text)
+
+    # Lowercase
     text = text.lower()
+
+    # Replace ASCII punctuation with spaces (keeps unicode punctuation like — for now)
     text = "".join(char if char not in string.punctuation else " " for char in text)
-    text = " ".join(text.split())
-    return text
+
+    # Token filter: keep tokens that contain at least one letter or number
+    tokens = []
+    for tok in text.split():
+        if any(unicodedata.category(ch)[0] in {"L", "N"} for ch in tok):
+            tokens.append(tok)
+
+    return " ".join(tokens)
+
 
 def clean_lines(in_path: str, out_path: str) -> None:
     with open(in_path, encoding="utf-8", errors="replace") as fin, \
          open(out_path, "w", encoding="utf-8") as fout:
         for line in fin:
-            cleaned = my_cleaner(line)
+            cleaned = cleaner_v3(line)
             if cleaned:                 # drop empty lines after cleaning
                 fout.write(cleaned + "\n")
 from collections import Counter
