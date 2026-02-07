@@ -6,5 +6,7 @@ Basic Python pipeline for cleaning raw text data:
 - whitespace normalization
 - safe UTF-8 file handling
 - basic corpus statistics
+- Unicode handling
+- CSV utility
 
 This serves as a foundation for later NLP processing.
