@@ -1,30 +1,37 @@
-import string
 import unicodedata
+import string
 
-def cleaner_v3(text: str) -> str:
-    # Normalize unicode (helps make visually similar chars consistent)
+def strip_leading_marks(token: str) -> str:
+    # Remove combining marks at the start of the token
+    i = 0
+    while i < len(token) and unicodedata.category(token[i]) == "Mn":
+        i += 1
+    return token[i:]
+
+def cleaner_v4(text: str) -> str:
     text = unicodedata.normalize("NFKC", text)
-
-    # Lowercase
     text = text.lower()
 
-    # Replace ASCII punctuation with spaces (keeps unicode punctuation like — for now)
     text = "".join(char if char not in string.punctuation else " " for char in text)
 
-    # Token filter: keep tokens that contain at least one letter or number
     tokens = []
     for tok in text.split():
+        tok = strip_leading_marks(tok)
+        if not tok:
+            continue
+        # keep tokens that contain at least one letter/number
         if any(unicodedata.category(ch)[0] in {"L", "N"} for ch in tok):
             tokens.append(tok)
 
     return " ".join(tokens)
 
 
+
 def clean_lines(in_path: str, out_path: str) -> None:
     with open(in_path, encoding="utf-8", errors="replace") as fin, \
          open(out_path, "w", encoding="utf-8") as fout:
         for line in fin:
-            cleaned = cleaner_v3(line)
+            cleaned = cleaner_v4(line)
             if cleaned:                 # drop empty lines after cleaning
                 fout.write(cleaned + "\n")
 from collections import Counter
