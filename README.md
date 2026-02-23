@@ -36,15 +36,20 @@ This project focuses on building a robust text preprocessing foundation using on
 ---
 
 ## Usage
-```bash
+
 ### Clean a text file
+```bash
 python main.py clean-txt --in raw.txt --out clean.txt
-
+```
 ### Compute corpus statistics
+```bash
 python main.py stats --in clean.txt --topk 15
-
+```
 ### Clean a CSV column
+```bash
 python main.py clean-csv --in sample.csv --out sample_clean.csv --col title
-
+```
 ### Run a demo
+```bash
 python main.py demo --topk 10
+```
