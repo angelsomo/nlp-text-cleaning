@@ -93,11 +93,11 @@ def clean_csv_column(
             fieldnames.append(new_column)
 
         writer = csv.DictWriter(
-    fout,
-    fieldnames=fieldnames,
-    delimiter=out_delimiter,
-    quoting=csv.QUOTE_MINIMAL,
-)
+            fout,
+            fieldnames=fieldnames,
+            delimiter=out_delimiter,
+            quoting=csv.QUOTE_MINIMAL,
+        )
         writer.writeheader()
 
         for row in reader:
